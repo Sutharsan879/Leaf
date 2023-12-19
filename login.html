@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaf</title>
+    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+</head>
+<body>
+    <div class="container">
+        <div class="form-box">
+            <img src="leaf.png" alt="" height="100px" width="100px">
+            <h1 id="title">Sign Up</h1>
+            <form action="">
+                <div class="input-group">
+                    <div class="input-field" id="nameField">
+                        <i class="fa fa-user"></i>
+                        <input type="text" placeholder="Name" id="name">
+                    </div>
+                    <div class="input-field">
+                        <i class="fa fa-envelope"></i>
+                        <input type="email" placeholder="Email (without @gmail.com)" id="mail">
+                    </div>
+                    <div class="input-field">
+                        <i class="fa fa-lock"></i>
+                        <input type="password" placeholder="Password" id="password">
+                    </div>
+                    <p>Lost Password ? <a href="" id="lostpassword">Click Here!..</a></p>
+                </div>
+                <div class="btn-field">
+                    <button type="button" id="signupBtn">Sign Up</button>
+                    <button type="button" id="signinBtn" class="disable">Sign In</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+   <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-app.js";
+import { getDatabase, ref, set, get, child,update } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-database.js";
+
+
+       const firebaseConfig = {
+        apiKey: "AIzaSyCyAmgGS8C8WsKyt_HYQyYsvqHvbhqV30o",
+        authDomain: "leaf-login-dc068.firebaseapp.com",
+        projectId: "leaf-login-dc068",
+        storageBucket: "leaf-login-dc068.appspot.com",
+        messagingSenderId: "329082505753",
+        appId: "1:329082505753:web:5602a65b9c8c4bed0c3888"
+       };
+
+       let name=document.getElementById("name");
+       let pass=document.getElementById("password");
+       let mailid=document.getElementById("mail");
+     
+       const app = initializeApp(firebaseConfig);
+
+             const db = getDatabase(app);
+
+             document.getElementById("signupBtn").addEventListener('dblclick', function(e){
+                console.log(name.value)
+              e.preventDefault();
+              set(ref(db, 'user/' + document.getElementById("mail").value),
+              {
+ 
+                username: name.value,
+                email: mailid.value,
+                Password: pass.value
+
+              });
+                alert("Login Sucessfull  !");
+                mailid.value="";
+                pass.value="";
+             })
+        
+
+             const db1 = getDatabase(app);
+
+
+function loginUser() {
+
+    const userRef = ref(db1, 'user/' + document.getElementById("mail").value);
+
+    get(userRef).then((snapshot) => {
+        if (snapshot.exists()) {
+            const userData = snapshot.val();
+
+            if (userData.email === mail.value && userData.Password === pass.value) {
+                   window.location.href="index.html";
+            } else {
+                alert("Incorrect email or password. Please try again.");
+            }
+        } else {
+            alert("User does not exist. Please sign up first.");
+        }
+    }).catch((error) => {
+        console.error("Error getting user data:", error);
+    });
+}
+
+document.getElementById("signinBtn").addEventListener('dblclick', function(e) {
+    e.preventDefault();
+    loginUser();
+});
+
+
+
+let signupBtn=document.getElementById("signupBtn");
+        let signinBtn=document.getElementById("signinBtn");
+        let nameField=document.getElementById("nameField");
+        let title=document.getElementById("title");
+
+        signinBtn.onclick=function()
+        {
+            nameField.style.maxHeight="0";
+            title.innerHTML="Sign In";
+            signupBtn.classList.add("disable");
+            signinBtn.classList.remove("disable");
+        }
+        signupBtn.onclick=function()
+        {
+            nameField.style.maxHeight="60px";
+            title.innerHTML="Sign Up";
+            signupBtn.classList.remove("disable");
+            signinBtn.classList.add("disable");
+        }
+
+
+  
+  
+
+   </script>
+</body>
+</html>
